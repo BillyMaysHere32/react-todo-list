@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import TodoList from './TodoList';
 
 function App() {
+  const [todos, setTodos] = useState([])
+  
   return (
     <div>
-      <TodoList />
+      <TodoList todos={todos}/>
       <input type="text" />
       <button>Add Todo</button>
       <button>Clear Completed Todos</button>
