@@ -45,12 +45,21 @@ function App() {
   }
 
   return (
-    <div>
-      <TodoList todos={todos} toggleTodo={toggleTodo} />
-      <input ref={todoNameRef} type="text" />
-      <button onClick={handleAddTodo}>Add Todo</button>
-      <button onClick={handleClearTodos}>Clear Completed Todos</button>
-      <div>{todos.filter(todo => !todo.complete).length} left to do</div>
+    <div className="App">
+      <header className="App-header">
+        <h1>Todo List</h1>
+        <div className="App-container">
+          <div className="App-user-input">
+            <input ref={todoNameRef} type="text" />
+            <button onClick={handleAddTodo}>Add Todo</button>
+            <button onClick={handleClearTodos}>Clear Completed Todos</button>
+            <div>{todos.filter(todo => !todo.complete).length} left to do</div>
+          </div>
+          <div className="App-todolist">
+            <TodoList todos={todos} toggleTodo={toggleTodo} />
+          </div>
+        </div>
+      </header>
     </div>
   )
 }
