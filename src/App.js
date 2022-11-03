@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import './App.css';
 import TodoList from './TodoList';
 // uuid library to provide random ids
-import { v4 as uuidv4 } from 'uuid';
 
 const localStorageKey = 'todoApp.todos'
 
@@ -12,8 +11,8 @@ function App() {
 
   // call effect to load todos
   useEffect(() => {
-    const storedTodos = JSON.parse(localStorage.getItem(localStorageKey));
-    if (storedTodos) setTodos( prevTodos => [...prevTodos, ...storedTodos] );
+    const storedTodos = JSON.parse(localStorage.getItem(localStorageKey))
+    if (storedTodos) setTodos(storedTodos);
   }, [])
   // empty array makes effect run once when component mounts
 
@@ -22,25 +21,36 @@ function App() {
   }, [todos])
   // anytime todos changes, useEffect is triggered
 
-  
+  function toggleTodo(id) {
+    // copy of todos list so we dont change current todolist
+    const newTodos = [...todos];
+    const todo = newTodos.find(todo => todo.id === id)
+    todo.complete = !todo.complete;
+    setTodos(newTodos)
+  }
 
   function handleAddTodo(e) {
     const name = todoNameRef.current.value;
     if (name === '') return;
     setTodos(prevTodos => {
       // add new todos to prev and spread over array
-      return [...prevTodos, { id: uuidv4(), name: name, complete: false}]
+      return [...prevTodos, { id: (todos.length + 1), name: name, complete: false}]
     })
     todoNameRef.current.value = null;
   }
 
+  function handleClearTodos() {
+    const newTodos = todos.filter(todo => !todo.complete)
+    setTodos(newTodos)
+  }
+
   return (
     <div>
-      <TodoList todos={todos}/>
+      <TodoList todos={todos} toggleTodo={toggleTodo} />
       <input ref={todoNameRef} type="text" />
-      <button onClick= {handleAddTodo}>Add Todo</button>
-      <button>Clear Completed Todos</button>
-      <div>0 left to do</div>
+      <button onClick={handleAddTodo}>Add Todo</button>
+      <button onClick={handleClearTodos}>Clear Completed Todos</button>
+      <div>{todos.filter(todo => !todo.complete).length} left to do</div>
     </div>
   )
 }
